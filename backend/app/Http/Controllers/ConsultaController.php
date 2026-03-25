@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Consulta;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\HistoriaClinica;
 
 class ConsultaController extends Controller
 {
@@ -13,8 +14,9 @@ class ConsultaController extends Controller
      */
     public function index()
     {
-        //
-    }
+       $consultas = Consulta::with('historia.paciente')->get();
+    return response()->json($consultas);
+}
 
     /**
      * Show the form for creating a new resource.
@@ -29,8 +31,23 @@ class ConsultaController extends Controller
      */
     public function store(Request $request)
     {
-        $consulta = Consulta::create($request->all());
-        return response()->json($consulta, 201);    }
+    // buscar historia
+    $historia = HistoriaClinica::where('paciente_id', $request->paciente_id)->first();
+
+    // crear consulta usando el id correcto
+    $consulta = Consulta::create([
+        'historia_clinica_id' => $historia->id, 
+        'user_id' => $request->user_id,
+        'fecha_consulta' => $request->fecha_consulta,
+        'motivo_consulta' => $request->motivo_consulta,
+        'examen_clinico' => $request->examen_clinico,
+        'diagnostico' => $request->diagnostico,
+        'plan_tratamiento' => $request->plan_tratamiento,
+        'observaciones' => $request->observaciones
+    ]);
+
+    return response()->json($consulta, 201);
+}
 
     /**
      * Display the specified resource.

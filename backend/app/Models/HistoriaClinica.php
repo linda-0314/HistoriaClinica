@@ -14,6 +14,7 @@ class HistoriaClinica extends Model
     'firma_odontologo',
     'fecha_firma'
 ];
+
 public function paciente()
     {
         return $this->belongsTo(Paciente::class);
