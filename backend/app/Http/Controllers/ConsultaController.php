@@ -29,8 +29,8 @@ class ConsultaController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $consulta = Consulta::create($request->all());
+        return response()->json($consulta, 201);    }
 
     /**
      * Display the specified resource.

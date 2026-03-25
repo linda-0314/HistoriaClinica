@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('consultas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('historia_clinica_id')->constrained()->onDelete('cascade');
-            $table->foreignId('odontologo_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')
+                  ->constrained('users')
+                  ->onDelete('cascade');
             $table->date('fecha_consulta');
             $table->text('motivo_consulta');
             $table->text('examen_clinico');

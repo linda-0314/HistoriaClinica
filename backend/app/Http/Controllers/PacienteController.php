@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Paciente;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class PacienteController extends Controller
 {
@@ -24,12 +25,26 @@ class PacienteController extends Controller
         //
     }
 
+    public function usuariosDisponibles()
+    
+    {
+
+    $usuarios = User::where('role', 'paciente')
+        ->whereDoesntHave('paciente')
+        ->get();
+
+    return response()->json($usuarios);
+    
+    }
+
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        $paciente = Paciente::create($request->all());
+         return response()->json($paciente, 201);
     }
 
     /**

@@ -29,7 +29,17 @@ class HistoriaClinicaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $historia = HistoriaClinica::create([
+            'paciente_id' => $request->paciente_id,
+            'fecha_creacion' => $request->fecha_creacion,
+            'antecedentes_generales' => $request->antecedentes_generales,
+            'firma_paciente' => $request->firma_paciente,
+            'firma_odontologo' => $request->firma_odontologo,
+            'fecha_firma' => $request->fecha_firma
+        ]);
+
+        return response()->json($historia, 201);
+    
     }
 
     /**
