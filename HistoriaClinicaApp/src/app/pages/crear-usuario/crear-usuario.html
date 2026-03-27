@@ -1,0 +1,28 @@
+<div class="crear-page">
+<div class="crear-card">
+    <h2>Crear Usuario</h2>
+
+    <label>Nombre completo:</label>
+    <input type="text" [(ngModel)]="nombre" />
+
+    <label>Correo electrónico:</label>
+    <input type="email" [(ngModel)]="correo" />
+
+    <label>Contraseña:</label>
+    <input type="password" [(ngModel)]="password" />
+
+    <label>Rol:</label>
+    <select [(ngModel)]="rol">
+    <option value="">Seleccione un rol</option>
+    <option value="administrador">Administrador</option>
+    <option value="auxiliar">Auxiliar</option>
+    <option value="odontologo">Odontólogo</option>
+    <option value="paciente">Paciente</option>
+    </select>
+
+    <div class="botones">
+    <button class="btn guardar" (click)="guardarUsuario()">Guardar</button>
+    <button class="btn volver" (click)="volver()">Volver</button>
+    </div>
+</div>
+</div>

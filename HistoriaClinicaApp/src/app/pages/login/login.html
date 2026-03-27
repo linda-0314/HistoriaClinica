@@ -1,0 +1,18 @@
+<div class="login-page">
+  <div class="login-card">
+    <img src="logo.jpg" alt="Logotipo de Oral Life" class="logo" />
+
+    <label>Correo electrónico:</label>
+    <input type="email" [(ngModel)]="email" />
+
+    <label>Contraseña:</label>
+    <input type="password" [(ngModel)]="password" />
+
+    <button class="btn-login" (click)="iniciarSesion()">Iniciar sesión</button>
+
+    <button class="btn-google">
+      <img src="google.png" alt="Google" />
+      Iniciar sesión con Google
+    </button>
+  </div>
+</div>

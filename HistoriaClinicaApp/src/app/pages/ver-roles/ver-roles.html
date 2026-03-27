@@ -1,0 +1,226 @@
+<div class="roles-page">
+
+  <!-- VISTA LISTA -->
+  <div *ngIf="!vistaDetalleHistoria && !vistaEditarAuxiliar">
+    <div class="roles-top">
+      <button
+        class="rol-btn"
+        [class.activo]="rolSeleccionado === 'Paciente'"
+        (click)="cambiarRol('Paciente')"
+      >
+        Paciente
+      </button>
+
+      <button
+        class="rol-btn"
+        [class.activo]="rolSeleccionado === 'Odontologo'"
+        (click)="cambiarRol('Odontologo')"
+      >
+        Odontólogo
+      </button>
+
+      <button
+        class="rol-btn"
+        [class.activo]="rolSeleccionado === 'Auxiliar'"
+        (click)="cambiarRol('Auxiliar')"
+      >
+        Auxiliar
+      </button>
+    </div>
+
+    <div class="roles-card">
+      <h2>Historias Clínicas</h2>
+
+      <div class="buscador">
+        <input
+          type="text"
+          placeholder="Buscar paciente..."
+          [(ngModel)]="busqueda"
+        />
+        <button (click)="buscarPaciente()">Buscar</button>
+      </div>
+
+      <!-- PACIENTE -->
+      <div *ngIf="rolSeleccionado === 'Paciente'">
+        <table>
+          <thead>
+            <tr>
+              <th>Paciente</th>
+              <th>Fecha</th>
+              <th>Motivo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let historia of historiasFiltradas">
+              <td>{{ historia.paciente }}</td>
+              <td>{{ historia.fecha }}</td>
+              <td>{{ historia.motivo }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="detalle" *ngIf="historiaSeleccionada">
+          <h3>Historia Clínica - {{ historiaSeleccionada.paciente }}</h3>
+
+          <p><strong>Fecha de Creación:</strong> {{ historiaSeleccionada.fechaCreacion }}</p>
+          <p><strong>Fecha de Consulta:</strong> {{ historiaSeleccionada.consultas[0].fechaConsulta }}</p>
+          <p><strong>Motivo:</strong> {{ historiaSeleccionada.consultas[0].motivo }}</p>
+          <p><strong>Examen Clínico:</strong> {{ historiaSeleccionada.consultas[0].examen }}</p>
+          <p><strong>Diagnóstico:</strong> {{ historiaSeleccionada.consultas[0].diagnostico }}</p>
+          <p><strong>Plan de Tratamiento:</strong> {{ historiaSeleccionada.consultas[0].tratamiento }}</p>
+          <p><strong>Observaciones:</strong> {{ historiaSeleccionada.consultas[0].observaciones }}</p>
+        </div>
+      </div>
+
+      <!-- ODONTOLOGO -->
+      <div *ngIf="rolSeleccionado === 'Odontologo'">
+        <table>
+          <thead>
+            <tr>
+              <th>Paciente</th>
+              <th>Fecha</th>
+              <th>Motivo</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let historia of historiasFiltradas">
+              <td>{{ historia.paciente }}</td>
+              <td>{{ historia.fecha }}</td>
+              <td>{{ historia.motivo }}</td>
+              <td>
+                <button class="btn-ver" (click)="verHistoria(historia)">Ver</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- AUXILIAR -->
+      <div *ngIf="rolSeleccionado === 'Auxiliar'">
+        <table>
+          <thead>
+            <tr>
+              <th>Paciente</th>
+              <th>Fecha</th>
+              <th>Motivo</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let historia of historiasFiltradas">
+              <td>{{ historia.paciente }}</td>
+              <td>{{ historia.fecha }}</td>
+              <td>{{ historia.motivo }}</td>
+              <td>
+                <div class="acciones">
+                  <button class="btn-ver" (click)="verHistoria(historia)">Ver</button>
+                  <button class="btn-editar" (click)="editarHistoria(historia)">Editar</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <button class="salir-btn" (click)="salir()">Salir</button>
+  </div>
+
+  <!-- VISTA DETALLE -->
+  <div class="detalle-page" *ngIf="vistaDetalleHistoria && historiaSeleccionada">
+    <div class="detalle-card">
+      <h1>Historia Clínica de {{ historiaSeleccionada.paciente }}</h1>
+
+      <div class="bloque-detalle">
+        <p><strong>Fecha de Creación:</strong> {{ historiaSeleccionada.fechaCreacion }}</p>
+        <p><strong>Nombre del Paciente:</strong> {{ historiaSeleccionada.paciente }}</p>
+        <p><strong>Fecha de Nacimiento:</strong> {{ historiaSeleccionada.fechaNacimiento }}</p>
+        <p><strong>Sexo:</strong> {{ historiaSeleccionada.sexo }}</p>
+        <p><strong>Número de Identificación:</strong> {{ historiaSeleccionada.identificacion }}</p>
+        <p><strong>Teléfono:</strong> {{ historiaSeleccionada.telefono }}</p>
+        <p><strong>Dirección:</strong> {{ historiaSeleccionada.direccion }}</p>
+        <p><strong>Antecedentes Generales:</strong> {{ historiaSeleccionada.antecedentes }}</p>
+
+        <div class="firmas">
+          <div class="firma-box">
+            <span>Firma del Paciente</span>
+            <h3>{{ historiaSeleccionada.firmaPaciente }}</h3>
+          </div>
+
+          <div class="firma-box">
+            <span>Firma del Odontólogo</span>
+            <h3>{{ historiaSeleccionada.firmaOdontologo }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="bloque-detalle" *ngFor="let consulta of historiaSeleccionada.consultas">
+        <p><strong>Fecha de la Consulta:</strong> {{ consulta.fechaConsulta }}</p>
+        <p><strong>Motivo:</strong> {{ consulta.motivo }}</p>
+        <p *ngIf="consulta.examen"><strong>Examen Clínico:</strong> {{ consulta.examen }}</p>
+        <p *ngIf="consulta.diagnostico"><strong>Diagnóstico:</strong> {{ consulta.diagnostico }}</p>
+        <p *ngIf="consulta.tratamiento"><strong>Plan de Tratamiento:</strong> {{ consulta.tratamiento }}</p>
+        <p *ngIf="consulta.observaciones"><strong>Observaciones:</strong> {{ consulta.observaciones }}</p>
+      </div>
+
+      <button class="salir-btn detalle-btn" (click)="salir()">Salir</button>
+    </div>
+  </div>
+
+  <!-- VISTA EDITAR AUXILIAR -->
+  <div class="editar-page" *ngIf="vistaEditarAuxiliar && historiaEditando">
+    <div class="editar-card">
+      <h1>Editar Historia Clínica</h1>
+
+      <div class="bloque-editar">
+        <label>Fecha de Creación:</label>
+        <input type="date" [(ngModel)]="historiaEditando.fechaCreacion">
+
+        <label>Nombre del Paciente:</label>
+        <input type="text" [(ngModel)]="historiaEditando.paciente">
+
+        <label>Fecha de Nacimiento:</label>
+        <input type="date" [(ngModel)]="historiaEditando.fechaNacimiento">
+
+        <label>Sexo:</label>
+        <input type="text" [(ngModel)]="historiaEditando.sexo">
+
+        <label>Número de Identificación:</label>
+        <input type="text" [(ngModel)]="historiaEditando.identificacion">
+
+        <label>Teléfono:</label>
+        <input type="text" [(ngModel)]="historiaEditando.telefono">
+
+        <label>Dirección:</label>
+        <input type="text" [(ngModel)]="historiaEditando.direccion">
+
+        <label>Antecedentes Generales:</label>
+        <textarea rows="3" [(ngModel)]="historiaEditando.antecedentes"></textarea>
+      </div>
+
+      <div class="bloque-editar">
+        <label>Fecha de la Consulta:</label>
+        <input type="date" [(ngModel)]="historiaEditando.fechaConsulta">
+
+        <label>Motivo:</label>
+        <textarea rows="3" [(ngModel)]="historiaEditando.motivo"></textarea>
+
+        <label>Examen Clínico:</label>
+        <textarea rows="3" [(ngModel)]="historiaEditando.examen"></textarea>
+
+        <label>Diagnóstico:</label>
+        <textarea rows="3" [(ngModel)]="historiaEditando.diagnostico"></textarea>
+
+        <label>Plan de Tratamiento:</label>
+        <textarea rows="3" [(ngModel)]="historiaEditando.tratamiento"></textarea>
+
+        <label>Observaciones:</label>
+        <textarea rows="3" [(ngModel)]="historiaEditando.observaciones"></textarea>
+      </div>
+
+      <button class="guardar-btn" (click)="guardarCambios()">Guardar Cambios</button>
+    </div>
+  </div>
+
+</div>

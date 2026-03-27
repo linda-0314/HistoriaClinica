@@ -1,0 +1,64 @@
+.crear-page {
+min-height: 100vh;
+background: #d7f2f7;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.crear-card {
+width: 500px;
+background: #f2f2f2;
+border-radius: 25px;
+padding: 30px;
+box-sizing: border-box;
+}
+
+.crear-card h2 {
+text-align: center;
+margin-bottom: 20px;
+font-size: 28px;
+}
+
+label {
+display: block;
+margin: 14px 0 8px;
+font-size: 18px;
+}
+
+input,
+select {
+width: 100%;
+height: 50px;
+border: none;
+outline: none;
+border-radius: 14px;
+background: #d9d9d9;
+padding: 0 15px;
+font-size: 16px;
+box-sizing: border-box;
+}
+
+.botones {
+display: flex;
+justify-content: center;
+gap: 15px;
+margin-top: 25px;
+}
+
+.btn {
+border: none;
+border-radius: 12px;
+padding: 12px 24px;
+font-size: 16px;
+cursor: pointer;
+color: white;
+}
+
+.guardar {
+background: #5bc0de;
+}
+
+.volver {
+background: #e74c3c;
+}

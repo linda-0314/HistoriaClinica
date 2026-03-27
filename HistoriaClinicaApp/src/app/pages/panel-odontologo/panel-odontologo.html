@@ -1,0 +1,84 @@
+<div class="odontologo-page">
+
+  <div *ngIf="!vistaDetalle" class="odontologo-lista">
+    <h1>Hola, Dr. Ruiz</h1>
+
+    <div class="top-bar">
+    <input
+        type="text"
+        placeholder="Buscar paciente..."
+        [(ngModel)]="busqueda"
+    />
+    <button class="btn-buscar">Buscar</button>
+    <button class="btn-cerrar" (click)="cerrarSesion()">Cerrar Sesión</button>
+    </div>
+
+    <h2>Todas las Historias Clínicas</h2>
+
+    <div class="tabla-card">
+    <table>
+        <thead>
+        <tr>
+            <th>Paciente</th>
+            <th>Fecha</th>
+            <th>Motivo</th>
+            <th>Diagnóstico</th>
+            <th>Acción</th>
+        </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let historia of historiasFiltradas">
+            <td>{{ historia.paciente }}</td>
+            <td>{{ historia.fecha }}</td>
+            <td>{{ historia.motivo }}</td>
+            <td>{{ historia.diagnostico }}</td>
+            <td>
+            <button class="btn-ver" (click)="verHistoria(historia)">Ver</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+
+  <div *ngIf="vistaDetalle && historiaSeleccionada" class="detalle-page">
+    <div class="detalle-card">
+    <h1>Historia Clínica de {{ historiaSeleccionada.paciente }}</h1>
+
+    <div class="bloque-detalle">
+        <p><strong>Fecha de Creación:</strong> {{ historiaSeleccionada.fechaCreacion }}</p>
+        <p><strong>Nombre del Paciente:</strong> {{ historiaSeleccionada.paciente }}</p>
+        <p><strong>Fecha de Nacimiento:</strong> {{ historiaSeleccionada.fechaNacimiento }}</p>
+        <p><strong>Sexo:</strong> {{ historiaSeleccionada.sexo }}</p>
+        <p><strong>Número de Identificación:</strong> {{ historiaSeleccionada.identificacion }}</p>
+        <p><strong>Teléfono:</strong> {{ historiaSeleccionada.telefono }}</p>
+        <p><strong>Dirección:</strong> {{ historiaSeleccionada.direccion }}</p>
+        <p><strong>Antecedentes Generales:</strong> {{ historiaSeleccionada.antecedentes }}</p>
+
+        <div class="firmas">
+        <div class="firma-box">
+            <span>Firma del Paciente</span>
+            <h3>{{ historiaSeleccionada.firmaPaciente }}</h3>
+        </div>
+
+        <div class="firma-box">
+            <span>Firma del Odontólogo</span>
+            <h3>{{ historiaSeleccionada.firmaOdontologo }}</h3>
+        </div>
+        </div>
+    </div>
+
+      <div class="bloque-detalle" *ngFor="let consulta of historiaSeleccionada.consultas">
+        <p><strong>Fecha de la Consulta:</strong> {{ consulta.fechaConsulta }}</p>
+        <p><strong>Motivo:</strong> {{ consulta.motivo }}</p>
+        <p *ngIf="consulta.examen"><strong>Examen Clínico:</strong> {{ consulta.examen }}</p>
+        <p *ngIf="consulta.diagnostico"><strong>Diagnóstico:</strong> {{ consulta.diagnostico }}</p>
+        <p *ngIf="consulta.tratamiento"><strong>Plan de Tratamiento:</strong> {{ consulta.tratamiento }}</p>
+        <p *ngIf="consulta.observaciones"><strong>Observaciones:</strong> {{ consulta.observaciones }}</p>
+    </div>
+
+    <button class="salir-btn" (click)="salir()">Salir</button>
+    </div>
+</div>
+
+</div>

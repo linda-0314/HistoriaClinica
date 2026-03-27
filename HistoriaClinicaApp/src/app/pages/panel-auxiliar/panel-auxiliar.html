@@ -1,0 +1,181 @@
+<div class="auxiliar-page">
+
+  <div class="auxiliar-card" *ngIf="vistaNuevaConsulta">
+    <div class="top-bar">
+    <input
+        type="text"
+        placeholder="Buscar paciente..."
+        [(ngModel)]="busqueda"
+    />
+    <button class="btn-buscar" (click)="buscarPaciente()">Buscar</button>
+    <button class="btn-ver" (click)="verHistoriaSeleccionada()">Ver</button>
+    <button class="btn-cerrar" (click)="cerrarSesion()">Cerrar Sesión</button>
+    </div>
+
+    <div class="paciente-info">
+    Paciente seleccionado:
+    <strong>{{ pacienteSeleccionado.nombre }} - CC {{ pacienteSeleccionado.cc }}</strong>
+    </div>
+
+    <h1>Nueva Consulta</h1>
+
+    <label>Fecha de Consulta</label>
+    <input type="date" [(ngModel)]="nuevaConsulta.fechaConsulta" />
+
+    <label>Motivo de Consulta</label>
+    <textarea rows="4" [(ngModel)]="nuevaConsulta.motivo"></textarea>
+
+    <label>Examen Clínico</label>
+    <textarea rows="4" [(ngModel)]="nuevaConsulta.examen"></textarea>
+
+    <label>Diagnóstico</label>
+    <textarea rows="4" [(ngModel)]="nuevaConsulta.diagnostico"></textarea>
+
+    <label>Plan de Tratamiento</label>
+    <textarea rows="4" [(ngModel)]="nuevaConsulta.tratamiento"></textarea>
+
+    <label>Observaciones</label>
+    <textarea rows="4" [(ngModel)]="nuevaConsulta.observaciones"></textarea>
+
+    <button class="btn-guardar-consulta" (click)="guardarConsulta()">Guardar Consulta</button>
+    <button class="btn-crear-historia" (click)="abrirCrearHistoria()">Crear Historia Clínica</button>
+</div>
+
+  <div class="historia-form-card" *ngIf="vistaCrearHistoria">
+    <div class="titulo-form">Registrar historia clinica</div>
+
+    <label>Fecha historia clinica</label>
+    <input type="date" [(ngModel)]="nuevaHistoria.fechaHistoria" />
+
+    <label>Nombre</label>
+    <input type="text" [(ngModel)]="nuevaHistoria.nombre" />
+
+    <label>Fecha de Nacimiento</label>
+    <input type="date" [(ngModel)]="nuevaHistoria.fechaNacimiento" />
+
+    <label>Sexo</label>
+    <div class="sexo-box">
+    <label><input type="radio" name="sexo" value="Masculino" [(ngModel)]="nuevaHistoria.sexo" /> MASCULINO</label>
+    <label><input type="radio" name="sexo" value="Femenino" [(ngModel)]="nuevaHistoria.sexo" /> FEMENINO</label>
+    </div>
+
+    <label>Numero de Identificación</label>
+    <input type="text" [(ngModel)]="nuevaHistoria.numeroIdentificacion" />
+
+    <label>Telefono</label>
+    <input type="text" [(ngModel)]="nuevaHistoria.telefono" />
+
+    <label>Direccion</label>
+    <input type="text" [(ngModel)]="nuevaHistoria.direccion" />
+
+    <label>Antecedentes Generales</label>
+    <input type="text" [(ngModel)]="nuevaHistoria.antecedentes" />
+
+    <label>Firma del Paciente</label>
+    <input type="file" />
+
+    <label>Firma del Odontólogo</label>
+    <input type="file" />
+
+    <button class="btn-crear-historia" (click)="guardarHistoria()">Guardar</button>
+</div>
+
+  <div class="detalle-page" *ngIf="vistaDetalle && historiaSeleccionada">
+    <div class="detalle-card">
+    <h1>Historia Clínica de {{ historiaSeleccionada.paciente }}</h1>
+
+    <div class="bloque-detalle">
+        <p><strong>Fecha de Creación:</strong> {{ historiaSeleccionada.fechaCreacion }}</p>
+        <p><strong>Nombre del Paciente:</strong> {{ historiaSeleccionada.paciente }}</p>
+        <p><strong>Fecha de Nacimiento:</strong> {{ historiaSeleccionada.fechaNacimiento }}</p>
+        <p><strong>Sexo:</strong> {{ historiaSeleccionada.sexo }}</p>
+        <p><strong>Número de Identificación:</strong> {{ historiaSeleccionada.identificacion }}</p>
+        <p><strong>Teléfono:</strong> {{ historiaSeleccionada.telefono }}</p>
+        <p><strong>Dirección:</strong> {{ historiaSeleccionada.direccion }}</p>
+        <p><strong>Antecedentes Generales:</strong> {{ historiaSeleccionada.antecedentes }}</p>
+
+        <div class="firmas">
+        <div class="firma-box">
+            <span>Firma del Paciente</span>
+            <h3>{{ historiaSeleccionada.firmaPaciente }}</h3>
+        </div>
+
+        <div class="firma-box">
+            <span>Firma del Odontólogo</span>
+            <h3>{{ historiaSeleccionada.firmaOdontologo }}</h3>
+        </div>
+        </div>
+    </div>
+
+      <div class="bloque-detalle" *ngFor="let consulta of historiaSeleccionada.consultas">
+        <p><strong>Fecha de la Consulta:</strong> {{ consulta.fechaConsulta }}</p>
+        <p><strong>Motivo:</strong> {{ consulta.motivo }}</p>
+        <p *ngIf="consulta.examen"><strong>Examen Clínico:</strong> {{ consulta.examen }}</p>
+        <p *ngIf="consulta.diagnostico"><strong>Diagnóstico:</strong> {{ consulta.diagnostico }}</p>
+        <p *ngIf="consulta.tratamiento"><strong>Plan de Tratamiento:</strong> {{ consulta.tratamiento }}</p>
+        <p *ngIf="consulta.observaciones"><strong>Observaciones:</strong> {{ consulta.observaciones }}</p>
+    </div>
+
+    <div class="acciones-finales">
+        <button class="btn-editar-historia" (click)="editarHistoria()">Editar</button>
+        <button class="btn-salir-detalle" (click)="volverInicio()">Salir</button>
+    </div>
+    </div>
+</div>
+
+
+  <div class="editar-page" *ngIf="vistaEditar && historiaEditando">
+    <div class="editar-card">
+    <h1>Editar Historia Clínica</h1>
+
+    <div class="bloque-editar">
+        <label>Fecha de Creación:</label>
+        <input type="date" [(ngModel)]="historiaEditando.fechaCreacion">
+
+        <label>Nombre del Paciente:</label>
+        <input type="text" [(ngModel)]="historiaEditando.paciente">
+
+        <label>Fecha de Nacimiento:</label>
+        <input type="date" [(ngModel)]="historiaEditando.fechaNacimiento">
+
+        <label>Sexo:</label>
+        <input type="text" [(ngModel)]="historiaEditando.sexo">
+
+        <label>Número de Identificación:</label>
+        <input type="text" [(ngModel)]="historiaEditando.identificacion">
+
+        <label>Teléfono:</label>
+        <input type="text" [(ngModel)]="historiaEditando.telefono">
+
+        <label>Dirección:</label>
+        <input type="text" [(ngModel)]="historiaEditando.direccion">
+
+        <label>Antecedentes Generales:</label>
+        <textarea rows="3" [(ngModel)]="historiaEditando.antecedentes"></textarea>
+    </div>
+
+    <div class="bloque-editar">
+        <label>Fecha de la Consulta:</label>
+        <input type="date" [(ngModel)]="historiaEditando.fechaConsulta">
+
+        <label>Motivo:</label>
+        <textarea rows="3" [(ngModel)]="historiaEditando.motivo"></textarea>
+
+        <label>Examen Clínico:</label>
+        <textarea rows="3" [(ngModel)]="historiaEditando.examen"></textarea>
+
+        <label>Diagnóstico:</label>
+        <textarea rows="3" [(ngModel)]="historiaEditando.diagnostico"></textarea>
+
+        <label>Plan de Tratamiento:</label>
+        <textarea rows="3" [(ngModel)]="historiaEditando.tratamiento"></textarea>
+
+        <label>Observaciones:</label>
+        <textarea rows="3" [(ngModel)]="historiaEditando.observaciones"></textarea>
+    </div>
+
+    <button class="btn-guardar-cambios" (click)="guardarCambios()">Guardar Cambios</button>
+    </div>
+</div>
+
+</div>
