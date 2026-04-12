@@ -12,7 +12,7 @@ export const routes: Routes = [
 { path: 'panel-admin', component: PanelAdmin },
 { path: 'crear-usuario', component: CrearUsuario },
 { path: 'ver-roles', component: VerRoles },
-{ path: 'panel-paciente', component: PanelPaciente },
+{ path: 'panel-paciente/:id', component: PanelPaciente },
 { path: 'panel-odontologo', component: PanelOdontologo },
 { path: 'panel-auxiliar', component: PanelAuxiliar }
 ];

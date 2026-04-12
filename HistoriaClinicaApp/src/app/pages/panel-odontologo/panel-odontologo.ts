@@ -1,160 +1,137 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-panel-odontologo',
+  standalone: true, 
   imports: [CommonModule, FormsModule],
   templateUrl: './panel-odontologo.html',
   styleUrl: './panel-odontologo.css'
 })
-export class PanelOdontologo {
+export class PanelOdontologo implements OnInit {
   busqueda: string = '';
-  vistaDetalle: boolean = false;
+  cargando = true;
+
+  historias: any[] = [];
+  historiasFiltradas: any[] = [];
+
   historiaSeleccionada: any = null;
+  vistaDetalle = false;
 
-  historias = [
-    {
-      paciente: 'Juan Pérez',
-      fecha: '15/04/2026',
-      motivo: 'Control',
-      diagnostico: 'Limpieza',
-      fechaCreacion: '10/03/2026',
-      fechaNacimiento: '15/03/1995',
-      sexo: 'Masculino',
-      identificacion: '12345678',
-      telefono: '315 678 90 12',
-      direccion: 'Calle 123 #45-67',
-      antecedentes: 'Asma',
-      firmaPaciente: 'Juan Perez',
-      firmaOdontologo: 'Dr. Ruiz',
-      consultas: [
-        {
-          fechaConsulta: '15/04/2026',
-          motivo: 'Control',
-          examen: 'Limpieza dental completa',
-          diagnostico: 'Limpieza realizada sin contratiempos',
-          tratamiento: 'Cita en 6 meses',
-          observaciones: 'Ninguna'
-        },
-        {
-          fechaConsulta: '10/03/2026',
-          motivo: 'Dolor',
-          examen: '',
-          diagnostico: '',
-          tratamiento: '',
-          observaciones: ''
+  constructor(
+    private router: Router,
+    private api: ApiService
+  ) {}
+
+  ngOnInit(): void {
+    this.cargarHistorias();
+  }
+
+  cargarHistorias() {
+    this.cargando = true;
+
+    this.api.obtenerUsuariosPacientes().subscribe({
+      next: (resp: any) => {
+        const pacientes = Array.isArray(resp)
+          ? resp
+          : resp?.usuarios || resp?.pacientes || resp?.data || [];
+
+        if (!pacientes.length) {
+          this.historias = [];
+          this.historiasFiltradas = [];
+          this.cargando = false;
+          return;
         }
-      ]
-    },
-    {
-      paciente: 'María Gómez',
-      fecha: '10/03/2026',
-      motivo: 'Dolor',
-      diagnostico: 'Caries',
-      fechaCreacion: '08/03/2026',
-      fechaNacimiento: '08/07/1998',
-      sexo: 'Femenino',
-      identificacion: '87654321',
-      telefono: '300 456 78 90',
-      direccion: 'Carrera 10 #22-15',
-      antecedentes: 'Ninguno',
-      firmaPaciente: 'Maria Gomez',
-      firmaOdontologo: 'Dr. Ruiz',
-      consultas: [
-        {
-          fechaConsulta: '10/03/2026',
-          motivo: 'Dolor',
-          examen: 'Revisión de muela',
-          diagnostico: 'Caries',
-          tratamiento: 'Resina dental',
-          observaciones: 'Control en 15 días'
-        }
-      ]
-    },
-    {
-      paciente: 'Carlos Martínez',
-      fecha: '05/02/2026',
-      motivo: 'Dolor',
-      diagnostico: 'Caries',
-      fechaCreacion: '05/02/2026',
-      fechaNacimiento: '21/01/1992',
-      sexo: 'Masculino',
-      identificacion: '45678912',
-      telefono: '311 222 33 44',
-      direccion: 'Barrio Centro',
-      antecedentes: 'Alergia a penicilina',
-      firmaPaciente: 'Carlos Martinez',
-      firmaOdontologo: 'Dr. Ruiz',
-      consultas: [
-        {
-          fechaConsulta: '05/02/2026',
-          motivo: 'Dolor',
-          examen: 'Dolor fuerte en molar',
-          diagnostico: 'Caries',
-          tratamiento: 'Medicamento y extracción',
-          observaciones: 'Reposo'
-        }
-      ]
-    },
-    {
-      paciente: 'Laura Torres',
-      fecha: '20/01/2026',
-      motivo: 'Control',
-      diagnostico: 'Gingivitis',
-      fechaCreacion: '18/01/2026',
-      fechaNacimiento: '03/11/1990',
-      sexo: 'Femenino',
-      identificacion: '99887766',
-      telefono: '320 555 66 77',
-      direccion: 'Neiva',
-      antecedentes: 'Ninguno',
-      firmaPaciente: 'Laura Torres',
-      firmaOdontologo: 'Dr. Ruiz',
-      consultas: [
-        {
-          fechaConsulta: '20/01/2026',
-          motivo: 'Control',
-          examen: 'Revisión general',
-          diagnostico: 'Gingivitis',
-          tratamiento: 'Limpieza y control',
-          observaciones: 'Usar seda dental'
-        }
-      ]
-    },
-    {
-      paciente: 'José Ramírez',
-      fecha: '12/01/2026',
-      motivo: 'Emergencia',
-      diagnostico: 'Absceso',
-      fechaCreacion: '12/01/2026',
-      fechaNacimiento: '14/06/1988',
-      sexo: 'Masculino',
-      identificacion: '11223344',
-      telefono: '300 111 22 33',
-      direccion: 'Aipe',
-      antecedentes: 'Diabetes',
-      firmaPaciente: 'Jose Ramirez',
-      firmaOdontologo: 'Dr. Ruiz',
-      consultas: [
-        {
-          fechaConsulta: '12/01/2026',
-          motivo: 'Emergencia',
-          examen: 'Inflamación severa',
-          diagnostico: 'Absceso',
-          tratamiento: 'Medicamento y drenaje',
-          observaciones: 'Control urgente'
-        }
-      ]
+
+        const peticiones = pacientes.map((paciente: any) => {
+          const pacienteId = paciente?.paciente_id || paciente?.id;
+
+          if (!pacienteId) return of(null);
+
+          return this.api.obtenerHistoriaPorPaciente(pacienteId).pipe(
+            catchError(() => of(null)) 
+          );
+        });
+
+        (forkJoin(peticiones) as any).subscribe({
+          next: (respuestas: any[]) => {
+            const resultado: any[] = [];
+
+            respuestas.forEach((historiaResp: any, index: number) => {
+              const paciente = pacientes[index];
+
+              if (!historiaResp) return;
+
+              const consultas = Array.isArray(historiaResp?.consultas)
+                ? historiaResp.consultas
+                : [];
+
+              const ultimaConsulta = consultas.length > 0 ? consultas[consultas.length - 1] : null;
+
+              resultado.push({
+                id: historiaResp?.id,
+                paciente_id: paciente?.paciente_id || paciente?.id,
+                paciente: paciente?.nombre || paciente?.name || 'Sin nombre',
+                fechaCreacion: historiaResp?.fecha_creacion || '',
+                fechaNacimiento: paciente?.fecha_nacimiento || 'N/A',
+                sexo: paciente?.sexo || 'N/A',
+                identificacion: paciente?.numero_identificacion || paciente?.identificacion || '',
+                telefono: paciente?.telefono || '',
+                direccion: paciente?.direccion || '',
+                antecedentes: historiaResp?.antecedentes_generales || 'Ninguno',
+                firmaPaciente: historiaResp?.firma_paciente || 'Pendiente',
+                firmaOdontologo: historiaResp?.firma_odontologo || 'Pendiente',
+                
+                // Mapeo del array de consultas para el detalle
+                consultas: consultas.map((c: any) => ({
+                  fechaConsulta: c?.fecha_consulta || '',
+                  motivo: c?.motivo_consulta || '',
+                  examen: c?.examen_clinico || '',
+                  diagnostico: c?.diagnostico || '',
+                  tratamiento: c?.plan_tratamiento || '',
+                  observaciones: c?.observaciones || ''
+                })),
+
+                fechaTabla: ultimaConsulta?.fecha_consulta || historiaResp?.fecha_creacion || '',
+                motivoTabla: ultimaConsulta?.motivo_consulta || 'Sin consultas',
+                diagnosticoTabla: ultimaConsulta?.diagnostico || 'Pendiente'
+              });
+            });
+
+            this.historias = resultado;
+            this.historiasFiltradas = [...resultado];
+            this.cargando = false;
+          },
+          error: (err: any) => {
+            console.error('Error en forkJoin:', err);
+            this.cargando = false;
+          }
+        });
+      },
+      error: (err: any) => {
+        console.error('Error al obtener pacientes:', err);
+        this.cargando = false;
+        alert('No se pudieron cargar los datos del servidor.');
+      }
+    });
+  }
+
+  buscarPaciente() {
+    const texto = this.busqueda.toLowerCase().trim();
+
+    if (!texto) {
+      this.historiasFiltradas = [...this.historias];
+      return;
     }
-  ];
 
-  constructor(private router: Router) {}
-
-  get historiasFiltradas() {
-    return this.historias.filter(historia =>
-      historia.paciente.toLowerCase().includes(this.busqueda.toLowerCase())
+    this.historiasFiltradas = this.historias.filter((h: any) =>
+      (h.paciente || '').toLowerCase().includes(texto) ||
+      (h.identificacion || '').toString().includes(texto)
     );
   }
 
@@ -163,13 +140,9 @@ export class PanelOdontologo {
     this.vistaDetalle = true;
   }
 
-  salir() {
-    if (this.vistaDetalle) {
-      this.vistaDetalle = false;
-      this.historiaSeleccionada = null;
-    } else {
-      this.router.navigate(['/']);
-    }
+  volverListado() {
+    this.vistaDetalle = false;
+    this.historiaSeleccionada = null;
   }
 
   cerrarSesion() {

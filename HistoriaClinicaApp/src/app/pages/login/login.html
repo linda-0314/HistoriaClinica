@@ -1,18 +1,25 @@
 <div class="login-page">
   <div class="login-card">
-    <img src="logo.jpg" alt="Logotipo de Oral Life" class="logo" />
+    <img src="logo.jpg" alt="Logo" class="logo" />
 
-    <label>Correo electrónico:</label>
-    <input type="email" [(ngModel)]="email" />
+    <form (ngSubmit)="iniciarSesion()">
+      <label>Correo electrónico:</label>
+      <input
+        type="email"
+        name="email"
+        [(ngModel)]="email"
+      />
 
-    <label>Contraseña:</label>
-    <input type="password" [(ngModel)]="password" />
+      <label>Contraseña:</label>
+      <input
+        type="password"
+        name="password"
+        [(ngModel)]="password"
+      />
 
-    <button class="btn-login" (click)="iniciarSesion()">Iniciar sesión</button>
-
-    <button class="btn-google">
-      <img src="google.png" alt="Google" />
-      Iniciar sesión con Google
-    </button>
+      <button type="submit" class="btn-login">
+        Iniciar sesión
+      </button>
+    </form>
   </div>
 </div>

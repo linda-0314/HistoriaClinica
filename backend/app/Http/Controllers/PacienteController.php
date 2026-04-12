@@ -44,7 +44,7 @@ class PacienteController extends Controller
     public function store(Request $request)
     {
         $paciente = Paciente::create($request->all());
-         return response()->json($paciente, 201);
+        return response()->json($paciente, 201);
     }
 
     /**

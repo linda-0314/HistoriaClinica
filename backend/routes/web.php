@@ -15,6 +15,9 @@ Route::post('/users', [UserController::class, 'store'])
 Route::post('/login', [UserController::class, 'login'])
     ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]); // funcion de loguearse 
 
+Route::post('/login/google', [UserController::class, 'loginGoogle'])
+    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+
 
 Route::post('/pacientes', [PacienteController::class, 'store'])
     ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]); // creacion de paciente usuario (funcion auxiliar )
@@ -23,6 +26,9 @@ Route::get('/usuarios-pacientes', [UserController::class, 'pacientes']);// lista
 
 Route::post('/historias', [HistoriaClinicaController::class, 'store'])
     ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);// crear historia por primera vez 
+
+Route::put('/historias/{historiaClinica}', [HistoriaClinicaController::class, 'update'])
+    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
 Route::post('/consultas', [ConsultaController::class, 'store'])
     ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);// crear consultas para historial 

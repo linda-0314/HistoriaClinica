@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-panel-admin',
   templateUrl: './panel-admin.html',
-  styleUrl: './panel-admin.css'
+  styleUrls: ['./panel-admin.css']
 })
 export class PanelAdmin {
   constructor(private router: Router) {}

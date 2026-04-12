@@ -1,42 +1,57 @@
-<div class="paciente-page">
+<div class="paciente-page" *ngIf="!cargando && historia">
   <div class="paciente-card">
     <div class="top-bar">
       <button class="btn-cerrar" (click)="cerrarSesion()">Cerrar Sesión</button>
     </div>
 
-    <h1>Historia Clínica de {{ historia.paciente }}</h1>
+    <h1>Historia Clínica de {{ historia?.paciente }}</h1>
 
     <div class="bloque-detalle">
-      <p><strong>Fecha de Creación:</strong> {{ historia.fechaCreacion }}</p>
-      <p><strong>Nombre del Paciente:</strong> {{ historia.paciente }}</p>
-      <p><strong>Fecha de Nacimiento:</strong> {{ historia.fechaNacimiento }}</p>
-      <p><strong>Sexo:</strong> {{ historia.sexo }}</p>
-      <p><strong>Número de Identificación:</strong> {{ historia.identificacion }}</p>
-      <p><strong>Teléfono:</strong> {{ historia.telefono }}</p>
-      <p><strong>Dirección:</strong> {{ historia.direccion }}</p>
-      <p><strong>Antecedentes Generales:</strong> {{ historia.antecedentes }}</p>
+      <p><strong>Fecha de Creación:</strong> {{ historia?.fechaCreacion }}</p>
+      <p><strong>Nombre del Paciente:</strong> {{ historia?.paciente }}</p>
+      <p><strong>Fecha de Nacimiento:</strong> {{ historia?.fechaNacimiento }}</p>
+      <p><strong>Sexo:</strong> {{ historia?.sexo }}</p>
+      <p><strong>Número de Identificación:</strong> {{ historia?.identificacion }}</p>
+      <p><strong>Teléfono:</strong> {{ historia?.telefono }}</p>
+      <p><strong>Dirección:</strong> {{ historia?.direccion }}</p>
+      <p><strong>Antecedentes Generales:</strong> {{ historia?.antecedentes }}</p>
 
       <div class="firmas">
         <div class="firma-box">
           <span>Firma del Paciente</span>
-          <h3>{{ historia.firmaPaciente }}</h3>
+          <h3>{{ historia?.firmaPaciente }}</h3>
         </div>
 
         <div class="firma-box">
           <span>Firma del Odontólogo</span>
-          <h3>{{ historia.firmaOdontologo }}</h3>
+          <h3>{{ historia?.firmaOdontologo }}</h3>
         </div>
       </div>
     </div>
 
-    <div class="bloque-detalle" *ngFor="let consulta of historia.consultas">
-      <p><strong>Fecha de la Consulta:</strong> {{ consulta.fechaConsulta }}</p>
-      <p><strong>Motivo:</strong> {{ consulta.motivo }}</p>
-
-      <p *ngIf="consulta.examen"><strong>Examen Clínico:</strong> {{ consulta.examen }}</p>
-      <p *ngIf="consulta.diagnostico"><strong>Diagnóstico:</strong> {{ consulta.diagnostico }}</p>
-      <p *ngIf="consulta.tratamiento"><strong>Plan de Tratamiento:</strong> {{ consulta.tratamiento }}</p>
-      <p *ngIf="consulta.observaciones"><strong>Observaciones:</strong> {{ consulta.observaciones }}</p>
+    <h2 style="margin: 20px 0 10px 10px;" *ngIf="historia?.consultas?.length > 0">Consultas Realizadas</h2>
+    <div class="bloque-detalle" *ngFor="let consulta of historia?.consultas">
+      <p><strong>Fecha de la Consulta:</strong> {{ consulta?.fechaConsulta }}</p>
+      <p><strong>Motivo:</strong> {{ consulta?.motivo }}</p>
+      <p *ngIf="consulta?.examen"><strong>Examen Clínico:</strong> {{ consulta?.examen }}</p>
+      <p *ngIf="consulta?.diagnostico"><strong>Diagnóstico:</strong> {{ consulta?.diagnostico }}</p>
+      <p *ngIf="consulta?.tratamiento"><strong>Plan de Tratamiento:</strong> {{ consulta?.tratamiento }}</p>
+      <p *ngIf="consulta?.observaciones"><strong>Observaciones:</strong> {{ consulta?.observaciones }}</p>
     </div>
+  </div>
+</div>
+
+<div class="paciente-page" *ngIf="cargando">
+  <div class="paciente-card" style="text-align: center; padding: 50px;">
+    <h2>Cargando historia clínica</h2>
+    <p>Buscando </p>
+  </div>
+</div>
+
+<div class="paciente-page" *ngIf="!cargando && !historia">
+  <div class="paciente-card" style="text-align: center; padding: 50px;">
+    <h2>No se encontró tu historia clínica</h2>
+    <p>Por favor, contactate con el auxiliar.</p>
+    <button class="btn-cerrar" (click)="cerrarSesion()">Volver al Login</button>
   </div>
 </div>

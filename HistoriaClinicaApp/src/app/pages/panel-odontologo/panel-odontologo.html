@@ -1,51 +1,53 @@
 <div class="odontologo-page">
-
-  <div *ngIf="!vistaDetalle" class="odontologo-lista">
-    <h1>Hola, Dr. Ruiz</h1>
+  
+  <div class="odontologo-lista" *ngIf="!vistaDetalle">
+    <h1>Hola, Dr. Gustavo</h1>
 
     <div class="top-bar">
-    <input
+      <input
         type="text"
-        placeholder="Buscar paciente..."
         [(ngModel)]="busqueda"
-    />
-    <button class="btn-buscar">Buscar</button>
-    <button class="btn-cerrar" (click)="cerrarSesion()">Cerrar Sesión</button>
+        placeholder="Buscar paciente..."
+      />
+      <button class="btn-buscar" (click)="buscarPaciente()">Buscar</button>
+      <button class="btn-cerrar" (click)="cerrarSesion()">Cerrar Sesión</button>
     </div>
 
-    <h2>Todas las Historias Clínicas</h2>
+    <h3>Todas las Historias Clínicas</h3>
 
-    <div class="tabla-card">
-    <table>
+
+    <div class="tabla-card" *ngIf="!cargando">
+      <table>
         <thead>
-        <tr>
+          <tr>
             <th>Paciente</th>
             <th>Fecha</th>
             <th>Motivo</th>
             <th>Diagnóstico</th>
             <th>Acción</th>
-        </tr>
+          </tr>
         </thead>
+
         <tbody>
           <tr *ngFor="let historia of historiasFiltradas">
             <td>{{ historia.paciente }}</td>
-            <td>{{ historia.fecha }}</td>
-            <td>{{ historia.motivo }}</td>
-            <td>{{ historia.diagnostico }}</td>
+            <td>{{ historia.fechaTabla }}</td>
+            <td>{{ historia.motivoTabla }}</td>
+            <td>{{ historia.diagnosticoTabla }}</td>
             <td>
-            <button class="btn-ver" (click)="verHistoria(historia)">Ver</button>
+              <button class="btn-ver" (click)="verHistoria(historia)">Ver</button>
             </td>
-        </tr>
+          </tr>
         </tbody>
-    </table>
+      </table>
     </div>
-</div>
+  </div>
 
-  <div *ngIf="vistaDetalle && historiaSeleccionada" class="detalle-page">
+  <div class="detalle-page" *ngIf="vistaDetalle && historiaSeleccionada">
     <div class="detalle-card">
-    <h1>Historia Clínica de {{ historiaSeleccionada.paciente }}</h1>
+      <h1>Historia Clínica</h1>
 
-    <div class="bloque-detalle">
+      <div class="bloque-detalle">
         <p><strong>Fecha de Creación:</strong> {{ historiaSeleccionada.fechaCreacion }}</p>
         <p><strong>Nombre del Paciente:</strong> {{ historiaSeleccionada.paciente }}</p>
         <p><strong>Fecha de Nacimiento:</strong> {{ historiaSeleccionada.fechaNacimiento }}</p>
@@ -56,18 +58,19 @@
         <p><strong>Antecedentes Generales:</strong> {{ historiaSeleccionada.antecedentes }}</p>
 
         <div class="firmas">
-        <div class="firma-box">
+          <div class="firma-box">
             <span>Firma del Paciente</span>
             <h3>{{ historiaSeleccionada.firmaPaciente }}</h3>
-        </div>
+          </div>
 
-        <div class="firma-box">
+          <div class="firma-box">
             <span>Firma del Odontólogo</span>
             <h3>{{ historiaSeleccionada.firmaOdontologo }}</h3>
+          </div>
         </div>
-        </div>
-    </div>
+      </div>
 
+      <h2 style="margin: 20px 0 10px 10px;">Consultas Realizadas</h2>
       <div class="bloque-detalle" *ngFor="let consulta of historiaSeleccionada.consultas">
         <p><strong>Fecha de la Consulta:</strong> {{ consulta.fechaConsulta }}</p>
         <p><strong>Motivo:</strong> {{ consulta.motivo }}</p>
@@ -75,10 +78,9 @@
         <p *ngIf="consulta.diagnostico"><strong>Diagnóstico:</strong> {{ consulta.diagnostico }}</p>
         <p *ngIf="consulta.tratamiento"><strong>Plan de Tratamiento:</strong> {{ consulta.tratamiento }}</p>
         <p *ngIf="consulta.observaciones"><strong>Observaciones:</strong> {{ consulta.observaciones }}</p>
-    </div>
+      </div>
 
-    <button class="salir-btn" (click)="salir()">Salir</button>
+      <button class="salir-btn" (click)="volverListado()">Volver al Listado</button>
     </div>
-</div>
-
+  </div>
 </div>

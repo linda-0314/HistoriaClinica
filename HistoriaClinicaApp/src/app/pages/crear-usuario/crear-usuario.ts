@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-crear-usuario',
@@ -9,20 +10,43 @@ import { Router } from '@angular/router';
   styleUrl: './crear-usuario.css'
 })
 export class CrearUsuario {
-  nombre: string = '';
-  correo: string = '';
-  password: string = '';
-  rol: string = '';
+  nombre = '';
+  correo = '';
+  password = '';
+  rol = '';
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private api: ApiService
+  ) {}
 
-  guardarUsuario() {
-    alert('Usuario creado (solo frontend)');
-    console.log({
-      nombre: this.nombre,
-      correo: this.correo,
+  guardarUsuario(form: NgForm) {
+    const data = {
+      name: this.nombre,
+      email: this.correo,
       password: this.password,
-      rol: this.rol
+      role: this.rol
+    };
+
+    this.api.crearUsuario(data).subscribe({
+      next: () => {
+        this.nombre = '';
+        this.correo = '';
+        this.password = '';
+        this.rol = '';
+        form.resetForm();
+
+        alert('Creado exitoso');
+      },
+      error: (error) => {
+        if (error?.error?.errors?.email) {
+          alert(error.error.errors.email[0]);
+        } else if (error?.error?.message) {
+          alert(error.error.message);
+        } else {
+          alert('No se pudo crear');
+        }
+      }
     });
   }
 

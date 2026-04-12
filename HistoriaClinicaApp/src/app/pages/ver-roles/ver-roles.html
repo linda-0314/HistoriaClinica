@@ -1,121 +1,38 @@
 <div class="roles-page">
 
-  <!-- VISTA LISTA -->
-  <div *ngIf="!vistaDetalleHistoria && !vistaEditarAuxiliar">
+  <div *ngIf="!vistaDetalle && !vistaEditarAuxiliar">
     <div class="roles-top">
-      <button
-        class="rol-btn"
-        [class.activo]="rolSeleccionado === 'Paciente'"
-        (click)="cambiarRol('Paciente')"
-      >
-        Paciente
-      </button>
-
-      <button
-        class="rol-btn"
-        [class.activo]="rolSeleccionado === 'Odontologo'"
-        (click)="cambiarRol('Odontologo')"
-      >
-        Odontólogo
-      </button>
-
-      <button
-        class="rol-btn"
-        [class.activo]="rolSeleccionado === 'Auxiliar'"
-        (click)="cambiarRol('Auxiliar')"
-      >
-        Auxiliar
-      </button>
+      <button class="rol-btn" [class.activo]="rolSeleccionado === 'Paciente'" (click)="cambiarRol('Paciente')">Paciente</button>
+      <button class="rol-btn" [class.activo]="rolSeleccionado === 'Odontologo'" (click)="cambiarRol('Odontologo')">Odontólogo</button>
+      <button class="rol-btn" [class.activo]="rolSeleccionado === 'Auxiliar'" (click)="cambiarRol('Auxiliar')">Auxiliar</button>
     </div>
 
     <div class="roles-card">
       <h2>Historias Clínicas</h2>
-
       <div class="buscador">
-        <input
-          type="text"
-          placeholder="Buscar paciente..."
-          [(ngModel)]="busqueda"
-        />
+        <input type="text" placeholder="Buscar por nombre o identificación..." [(ngModel)]="busqueda" (input)="buscarPaciente()" />
         <button (click)="buscarPaciente()">Buscar</button>
       </div>
 
-      <!-- PACIENTE -->
-      <div *ngIf="rolSeleccionado === 'Paciente'">
+      <div class="tabla-contenedor">
         <table>
           <thead>
             <tr>
               <th>Paciente</th>
-              <th>Fecha</th>
-              <th>Motivo</th>
+              <th>Fecha Creación</th>
+              <th>Último Motivo</th>
+              <th *ngIf="rolSeleccionado !== 'Paciente'">Acción</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let historia of historiasFiltradas">
-              <td>{{ historia.paciente }}</td>
-              <td>{{ historia.fecha }}</td>
+              <td class="bold">{{ historia.paciente }}</td>
+              <td>{{ historia.fechaCreacion | date:'dd/MM/yyyy' }}</td>
               <td>{{ historia.motivo }}</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="detalle" *ngIf="historiaSeleccionada">
-          <h3>Historia Clínica - {{ historiaSeleccionada.paciente }}</h3>
-
-          <p><strong>Fecha de Creación:</strong> {{ historiaSeleccionada.fechaCreacion }}</p>
-          <p><strong>Fecha de Consulta:</strong> {{ historiaSeleccionada.consultas[0].fechaConsulta }}</p>
-          <p><strong>Motivo:</strong> {{ historiaSeleccionada.consultas[0].motivo }}</p>
-          <p><strong>Examen Clínico:</strong> {{ historiaSeleccionada.consultas[0].examen }}</p>
-          <p><strong>Diagnóstico:</strong> {{ historiaSeleccionada.consultas[0].diagnostico }}</p>
-          <p><strong>Plan de Tratamiento:</strong> {{ historiaSeleccionada.consultas[0].tratamiento }}</p>
-          <p><strong>Observaciones:</strong> {{ historiaSeleccionada.consultas[0].observaciones }}</p>
-        </div>
-      </div>
-
-      <!-- ODONTOLOGO -->
-      <div *ngIf="rolSeleccionado === 'Odontologo'">
-        <table>
-          <thead>
-            <tr>
-              <th>Paciente</th>
-              <th>Fecha</th>
-              <th>Motivo</th>
-              <th>Acción</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let historia of historiasFiltradas">
-              <td>{{ historia.paciente }}</td>
-              <td>{{ historia.fecha }}</td>
-              <td>{{ historia.motivo }}</td>
-              <td>
-                <button class="btn-ver" (click)="verHistoria(historia)">Ver</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- AUXILIAR -->
-      <div *ngIf="rolSeleccionado === 'Auxiliar'">
-        <table>
-          <thead>
-            <tr>
-              <th>Paciente</th>
-              <th>Fecha</th>
-              <th>Motivo</th>
-              <th>Acción</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let historia of historiasFiltradas">
-              <td>{{ historia.paciente }}</td>
-              <td>{{ historia.fecha }}</td>
-              <td>{{ historia.motivo }}</td>
-              <td>
+              <td *ngIf="rolSeleccionado !== 'Paciente'">
                 <div class="acciones">
                   <button class="btn-ver" (click)="verHistoria(historia)">Ver</button>
-                  <button class="btn-editar" (click)="editarHistoria(historia)">Editar</button>
+                  <button *ngIf="rolSeleccionado === 'Auxiliar'" class="btn-editar" (click)="editarHistoria(historia)">Editar</button>
                 </div>
               </td>
             </tr>
@@ -123,12 +40,10 @@
         </table>
       </div>
     </div>
-
     <button class="salir-btn" (click)="salir()">Salir</button>
   </div>
 
-  <!-- VISTA DETALLE -->
-  <div class="detalle-page" *ngIf="vistaDetalleHistoria && historiaSeleccionada">
+  <div class="detalle-page" *ngIf="vistaDetalle && historiaSeleccionada">
     <div class="detalle-card">
       <h1>Historia Clínica de {{ historiaSeleccionada.paciente }}</h1>
 
@@ -145,16 +60,16 @@
         <div class="firmas">
           <div class="firma-box">
             <span>Firma del Paciente</span>
-            <h3>{{ historiaSeleccionada.firmaPaciente }}</h3>
+            <h3>{{ historiaSeleccionada.firmaPaciente | uppercase }}</h3>
           </div>
-
           <div class="firma-box">
             <span>Firma del Odontólogo</span>
-            <h3>{{ historiaSeleccionada.firmaOdontologo }}</h3>
+            <h3>{{ historiaSeleccionada.firmaOdontologo | uppercase }}</h3>
           </div>
         </div>
       </div>
 
+      <h2 style="margin-top: 20px;">Consultas Realizadas</h2>
       <div class="bloque-detalle" *ngFor="let consulta of historiaSeleccionada.consultas">
         <p><strong>Fecha de la Consulta:</strong> {{ consulta.fechaConsulta }}</p>
         <p><strong>Motivo:</strong> {{ consulta.motivo }}</p>
@@ -164,11 +79,13 @@
         <p *ngIf="consulta.observaciones"><strong>Observaciones:</strong> {{ consulta.observaciones }}</p>
       </div>
 
-      <button class="salir-btn detalle-btn" (click)="salir()">Salir</button>
+      <div class="acciones-finales">
+        <button class="btn-salir-detalle" (click)="volverLista()">Volver</button>
+        <button class="salir-btn" (click)="volverLista()">Salir</button>
+      </div>
     </div>
   </div>
 
-  <!-- VISTA EDITAR AUXILIAR -->
   <div class="editar-page" *ngIf="vistaEditarAuxiliar && historiaEditando">
     <div class="editar-card">
       <h1>Editar Historia Clínica</h1>
@@ -219,7 +136,8 @@
         <textarea rows="3" [(ngModel)]="historiaEditando.observaciones"></textarea>
       </div>
 
-      <button class="guardar-btn" (click)="guardarCambios()">Guardar Cambios</button>
+      <button class="btn-guardar-cambios" (click)="guardarCambios()">Guardar Cambios</button>
+      <button class="btn-cerrar" (click)="vistaEditarAuxiliar = false">Cancelar</button>
     </div>
   </div>
 

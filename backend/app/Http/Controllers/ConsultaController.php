@@ -14,7 +14,7 @@ class ConsultaController extends Controller
      */
     public function index()
     {
-       $consultas = Consulta::with('historia.paciente')->get();
+    $consultas = Consulta::with('historia.paciente')->get();
     return response()->json($consultas);
 }
 

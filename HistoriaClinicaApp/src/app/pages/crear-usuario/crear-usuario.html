@@ -1,28 +1,30 @@
 <div class="crear-page">
-<div class="crear-card">
+  <div class="crear-card">
     <h2>Crear Usuario</h2>
 
-    <label>Nombre completo:</label>
-    <input type="text" [(ngModel)]="nombre" />
+    <form #usuarioForm="ngForm" (ngSubmit)="guardarUsuario(usuarioForm)">
+      <label>Nombre completo:</label>
+      <input type="text" name="nombre" [(ngModel)]="nombre" />
 
-    <label>Correo electrónico:</label>
-    <input type="email" [(ngModel)]="correo" />
+      <label>Correo electrónico:</label>
+      <input type="email" name="correo" [(ngModel)]="correo" />
 
-    <label>Contraseña:</label>
-    <input type="password" [(ngModel)]="password" />
+      <label>Contraseña:</label>
+      <input type="password" name="password" [(ngModel)]="password" />
 
-    <label>Rol:</label>
-    <select [(ngModel)]="rol">
-    <option value="">Seleccione un rol</option>
-    <option value="administrador">Administrador</option>
-    <option value="auxiliar">Auxiliar</option>
-    <option value="odontologo">Odontólogo</option>
-    <option value="paciente">Paciente</option>
-    </select>
+      <label>Rol:</label>
+      <select name="rol" [(ngModel)]="rol">
+        <option value="">Seleccione un rol</option>
+        <option value="administrador">Administrador</option>
+        <option value="auxiliar">Auxiliar</option>
+        <option value="odontologo">Odontólogo</option>
+        <option value="paciente">Paciente</option>
+      </select>
 
-    <div class="botones">
-    <button class="btn guardar" (click)="guardarUsuario()">Guardar</button>
-    <button class="btn volver" (click)="volver()">Volver</button>
-    </div>
-</div>
+      <div class="botones">
+        <button type="submit" class="btn guardar">Guardar</button>
+        <button type="button" class="btn volver" (click)="volver()">Volver</button>
+      </div>
+    </form>
+  </div>
 </div>

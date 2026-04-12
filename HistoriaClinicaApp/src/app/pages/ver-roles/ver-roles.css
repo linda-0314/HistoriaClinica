@@ -175,6 +175,7 @@ tbody tr:hover {
   text-align: center;
   margin-bottom: 30px;
   font-size: 28px;
+  color: #1f2d3d;
 }
 
 .bloque-detalle,
@@ -189,6 +190,17 @@ tbody tr:hover {
   margin: 10px 0;
   padding-bottom: 8px;
   border-bottom: 1px solid #dddddd;
+}
+
+.bloque-detalle p:last-child {
+  border-bottom: none;
+}
+
+.bloque-detalle p strong {
+  display: inline-block;
+  width: 220px;
+  color: #000;
+  font-weight: 700;
 }
 
 .firmas {
@@ -245,6 +257,70 @@ tbody tr:hover {
   color: white;
   border-radius: 20px;
   padding: 10px 26px;
+  cursor: pointer;
+}
+
+.editar-card {
+  width: 670px;
+  max-width: 100%;
+  background: #f5f5f5;
+  border-radius: 8px;
+  padding: 18px 20px;
+  box-sizing: border-box;
+}
+
+.editar-card h1 {
+  margin: 0 0 18px;
+  font-size: 22px;
+  color: #111;
+}
+
+.editar-card input,
+.editar-card textarea {
+  width: 100%;
+  border: 1px solid #cfcfcf;
+  border-radius: 4px;
+  padding: 8px 10px;
+  box-sizing: border-box;
+  margin-bottom: 14px;
+  resize: none;
+  font-size: 14px;
+}
+
+.bloque-editar {
+  background: #efefef;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.bloque-editar label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #444;
+}
+
+.btn-guardar-cambios {
+  display: block;
+  margin: 0 auto 10px;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 26px;
+  background: #57b9f3;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-cerrar {
+  display: block;
+  margin: 0 auto;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 26px;
+  background: #ef4b4b;
+  color: white;
   cursor: pointer;
   font-size: 14px;
 }
